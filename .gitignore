@@ -31,3 +31,13 @@ frontend/dist/
 
 # Vercel/Next.js (stale)
 .next/
+
+# External datasets (too large for git)
+empatheticdialogues/
+empathic_repo/
+
+# Training data
+训练数据/
+
+# Backend log
+/tmp/backend.log

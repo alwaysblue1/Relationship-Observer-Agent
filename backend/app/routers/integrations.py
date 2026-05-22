@@ -1,3 +1,5 @@
+import random
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -32,9 +34,17 @@ async def get_spotify_recommendation(
     genres = rec.get("suggested_genres", ["indie", "acoustic"])
     keywords = rec.get("mood_keywords", [])
 
-    tracks = await spotify_service.get_recommendations(genres, keywords)
+    # Randomize genre order and pick a random offset for variety
+    shuffled_genres = random.sample(genres, len(genres)) if len(genres) > 1 else list(genres)
+    tracks = await spotify_service.get_recommendations(shuffled_genres, keywords)
     if not tracks:
-        tracks = await spotify_service.search_tracks(genres[0] if genres else "indie")
+        # Try each genre with random priority
+        for genre in shuffled_genres:
+            tracks = await spotify_service.search_tracks(genre)
+            if tracks:
+                break
+        if not tracks:
+            tracks = await spotify_service.search_tracks("indie")
 
     return {
         "playlist_name": analysis.spotify_playlist_name or rec.get("playlist_name", "Observer Mix"),

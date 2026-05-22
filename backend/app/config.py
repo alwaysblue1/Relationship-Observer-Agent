@@ -18,6 +18,15 @@ class Settings(BaseSettings):
     max_upload_size_mb: int = 50
     embedding_dim: int = 1536
 
+    # Aliyun DashScope text-embedding-v4
+    aliyun_embedding_model: str = "text-embedding-v4"
+    aliyun_embedding_dim: int = 1024
+    aliyun_embedding_url: str = "https://dashscope.aliyuncs.com/api/v1/services/embeddings/text-embedding/text-embedding"
+
+    # RAG settings
+    rag_top_k: int = 3
+    rag_similarity_threshold: float = 0.6
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

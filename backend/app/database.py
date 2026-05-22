@@ -19,8 +19,10 @@ async def get_db() -> AsyncSession:
 
 async def init_db():
     from app.models.user import User  # noqa: F401
+    from app.models.pattern import PatternCard  # noqa: F401
 
     async with engine.begin() as conn:
+        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         await conn.run_sync(Base.metadata.create_all)
         try:
             await conn.execute(text(
